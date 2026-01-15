@@ -9,3 +9,15 @@ POST http://localhost:3000/items
 Content-Type: application/json
 
  {"name": "Mandariini"}
+
+### Update item with id 1
+PUT http://localhost:3000/items
+Content-Type: application/json
+
+ {"name": "Päivitetty Mandariini"}
+
+### Delete item
+DELETE http://localhost:3000/items
+Content-Type: application/json 
+
+ {"name": "Poistettu itemi"}

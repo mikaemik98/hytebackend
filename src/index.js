@@ -36,8 +36,21 @@ app.get('/items/:id', (req, res) => {
 });
 
 // TODO: add PUT route for items
+app.put('/items', (req, res) => {
+  items.push(req.body);
+  res.status(201).json({message: 'updated items'});
+});
 
 // TODO: add DELETE route for items
+app.delete('/items/:id', (req, res) => {
+  const itemDelete = items.find((item) => item.id == req.params.id);
+  if (itemDelete) {
+    items.splice(items.indexOf(itemDelete), 1);
+    res.status(204).json({message: 'deleted item'});
+  } else {
+    res.status(404).json({message: 'item not found'});
+  }
+});
 
 // Add new item
 app.post('/items', (req, res) => {
