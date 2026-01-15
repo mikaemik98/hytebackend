@@ -56,9 +56,11 @@ app.delete('/items/:id', (req, res) => {
 app.post('/items', (req, res) => {
   //console.log('add item request body', req.body);
   // TODO: lisää id listaan lisättävälle objektille (tehty)
-  const newID = items.length > 0 ? items[items.length - 1].id + 1 : 1;
-  req.body.id = newID;
-  items.push(req.body);
+  const newItem = {
+    id: items.length + 1,
+    name: req.body.name,
+  };
+  items.push(newItem);
   res.status(201).json({message: 'new item added'});
 });
 
