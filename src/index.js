@@ -35,13 +35,13 @@ app.get('/items/:id', (req, res) => {
   //res.json(itemFound);
 });
 
-// TODO: add PUT route for items
+// TODO: add PUT route for items (tehty)
 app.put('/items', (req, res) => {
   items.push(req.body);
   res.status(201).json({message: 'updated items'});
 });
 
-// TODO: add DELETE route for items
+// TODO: add DELETE route for items (tehty)
 app.delete('/items/:id', (req, res) => {
   const itemDelete = items.find((item) => item.id == req.params.id);
   if (itemDelete) {
@@ -55,7 +55,9 @@ app.delete('/items/:id', (req, res) => {
 // Add new item
 app.post('/items', (req, res) => {
   //console.log('add item request body', req.body);
-  // TODO: lisää id listaan lisättävälle objektille
+  // TODO: lisää id listaan lisättävälle objektille (tehty)
+  const newID = items.length > 0 ? items[items.length - 1].id + 1 : 1;
+  req.body.id = newID;
   items.push(req.body);
   res.status(201).json({message: 'new item added'});
 });
