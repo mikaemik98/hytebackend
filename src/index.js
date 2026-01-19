@@ -1,14 +1,14 @@
 import express from 'express';
+import {
+  getItems,
+  putItemById,
+  getItemById,
+  deleteItemById,
+  postNewItem,
+} from './items.js';
 const hostname = '127.0.0.1';
 const app = express();
 const port = 3000;
-
-// Dummy mock data (nollautuu aina, kun sovelluksen käynnistää uudelleen)
-const items = [
-  {id: 1, name: 'Omena'},
-  {id: 2, name: 'Banaani'},
-  {id: 3, name: 'Persikka'},
-];
 
 // parsitaan json data pyynnostä ja lisätään request-objektiin
 app.use(express.json());
@@ -22,50 +22,19 @@ app.get('/api', (req, res) => {
 });
 
 // Get all items
-app.get('/items', (req, res) => {
-  res.json(items);
-});
+app.get('/items', getItems);
 
 // Get item based on id
-app.get('/items/:id', (req, res) => {
-  console.log('getting item id:', req.params.id);
-  const itemFound = items.find((item) => item.id == req.params.id);
-  if (itemFound) {
-    res.json(itemFound);
-  } else {
-    res.status(404).json({message: 'item not found'});
-  }
-  //res.json(itemFound);
-});
+app.get('/items/:id', getItemById);
 
 // TODO: add PUT route for items (tehty)
-app.put('/items', (req, res) => {
-  items.push(req.body);
-  res.status(201).json({message: 'updated items'});
-});
+app.put('/items/:id', putItemById);
 
 // TODO: add DELETE route for items (tehty)
-app.delete('/items/:id', (req, res) => {
-  const itemDelete = items.find((item) => item.id == req.params.id);
-  if (itemDelete) {
-    items.splice(items.indexOf(itemDelete), 1);
-    res.status(204).json({message: 'deleted item'});
-  } else {
-    res.status(404).json({message: 'item not found'});
-  }
-});
+app.delete('/items/:id', deleteItemById);
 
 // Add new item
-app.post('/items', (req, res) => {
-  //console.log('add item request body', req.body);
-  // TODO: lisää id listaan lisättävälle objektille (tehty)
-  const newItem = {
-    id: items.length + 1,
-    name: req.body.name,
-  };
-  items.push(newItem);
-  res.status(201).json({message: 'new item added'});
-});
+app.post('/items', postNewItem);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
