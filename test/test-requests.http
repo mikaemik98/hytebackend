@@ -4,6 +4,11 @@
 ### GET all items
 GET http://localhost:3000/items
 
+### GET item with id
+GET http://localhost:3000/items/8
+content-type: application/json
+
+
 ### Add new item with id
 POST http://localhost:3000/items
 Content-Type: application/json

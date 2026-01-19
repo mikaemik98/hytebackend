@@ -13,8 +13,11 @@ const items = [
 // parsitaan json data pyynnostä ja lisätään request-objektiin
 app.use(express.json());
 
+// Tarjoillaan websivusto (front-end) palvelimen juuressa
+app.use('/', express.static('public'));
+
 // API ROOT
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('This is dummy items API!');
 });
 
