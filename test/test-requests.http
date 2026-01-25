@@ -41,8 +41,17 @@ Content-Type: application/json
     }
 
 ### Get user by id
-GET http://localhost:3000/users/2
+GET http://localhost:3000/users/6
 Content-Type: application/json
+
+### Update user by id
+PUT http://localhost:3000/users/2
+Content-Type: application/json
+
+ {
+   "username": "updated",
+    "email": "updated@example.com"
+ }
 
 ### Login succes
 POST http://localhost:3000/login
@@ -61,3 +70,7 @@ Content-Type: application/json
     "username": "johndoe",
     "password": "väärä"
  }
+
+### Delete user by id
+DELETE http://localhost:3000/users/3
+Content-Type: application/json

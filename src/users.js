@@ -21,18 +21,30 @@ const users = [
 ];
 
 const getUsers = (req, res) => {
+  for (let i = 0; i < users.length; i++) {
+    delete users[i].password;
+  }
   res.json(users);
 };
 
-const postNewUser = (req, res) => {
-  if (!req.body.username) {
-    return res.status(400).json({message: 'bad request'});
+// Käyttäjän lisäys (rekisteröityminen)
+const postNewUser = (pyynto, vastaus) => {
+  const newUser = pyynto.body;
+  // Uusilla käyttäjillä pitää olla kaikki vaaditut ominaisuudet tai palautetaan virhe
+  // itse koodattu erittäin yksinkertainen syötteen validointi
+  if (!(newUser.username && newUser.password && newUser.email)) {
+    return vastaus.status(400).json({error: 'required fields missing'});
   }
-  const newUserId =
-    users.length > 0 ? Math.max(...users.map((user) => user.id)) + 1 : 1;
-  const newUser = {id: newUserId, ...req.body};
-  users.push(newUser);
-  res.status(201).json({message: 'new user added', user: newUser});
+
+  // HUOM: ÄLÄ ikinä loggaa käyttäjätietoja ensimmäisten pakollisten testien jälkeen!!! (tietosuoja)
+  //console.log('registering new user', newUser);
+  const newId = users[users.length - 1].id + 1;
+  // luodaan uusi objekti, joka sisältää id-ominaisuuden ja kaikki newUserObjektin
+  // ominaisuudet ja lisätään users-taulukon loppuun
+  users.push({id: newId, ...newUser});
+  delete newUser.password;
+  console.log('users', users);
+  vastaus.status(201).json({message: 'new user added', user_id: newId});
 };
 
 const getUserById = (req, res) => {
@@ -45,32 +57,46 @@ const getUserById = (req, res) => {
   }
 };
 
-const loginUser = (req, res) => {
-  const {username, password} = req.body;
-
-  // Tarkistaa onko username ja password annettu
-  if (!username || !password) {
-    return res.status(400).json({message: 'username and password required'});
+const putUserById = (req, res) => {
+  console.log('updating user', req.params.id);
+  const userIndex = users.findIndex((user) => user.id == req.params.id);
+  if (userIndex !== -1) {
+    users[userIndex] = {...users[userIndex], ...req.body};
+    res.json({message: 'user updated', user: users[userIndex]});
+  } else {
+    res.status(404).json({message: 'user not found'});
   }
-
-  // Etsi käyttäjä
-  const user = users.find(
-    (credentials) =>
-      credentials.username === username && credentials.password === password,
-  );
-
-  if (!user) {
-    return res.status(401).json({message: 'invalid username or password'});
-  }
-
-  res.json({
-    message: 'login succesful',
-    user: {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-    },
-  });
 };
 
-export {getUsers, postNewUser, getUserById, loginUser};
+const deleteUserById = (req, res) => {
+  const userDelete = users.find((user) => user.id == req.params.id);
+  if (userDelete) {
+    users.splice(users.indexOf(userDelete), 1);
+    res.status(204).json({message: 'deleted user'});
+  } else {
+    res.status(404).json({message: 'user not found'});
+  }
+};
+
+const loginUser = (req, res) => {
+  const {username, password} = req.body;
+  // haetaan käyttäjä-objekti käyttäjän nimen perusteella
+  const userFound = users.find((user) => username === user.username);
+  if (userFound) {
+    if (userFound.password === password) {
+      delete userFound.password;
+      return res.json({message: 'login ok', user: userFound});
+    }
+    return res.status(403).json({error: 'invalid password'});
+  }
+  res.status(404).json({error: 'user not found'});
+};
+
+export {
+  getUsers,
+  postNewUser,
+  getUserById,
+  loginUser,
+  putUserById,
+  deleteUserById,
+};

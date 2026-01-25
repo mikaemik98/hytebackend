@@ -6,7 +6,14 @@ import {
   deleteItemById,
   postNewItem,
 } from './items.js';
-import {getUsers, postNewUser, getUserById, loginUser} from './users.js';
+import {
+  getUsers,
+  postNewUser,
+  getUserById,
+  loginUser,
+  putUserById,
+  deleteUserById,
+} from './users.js';
 const hostname = '127.0.0.1';
 const app = express();
 const port = 3000;
@@ -43,9 +50,13 @@ app.get('/users', getUsers);
 // Post a new user
 app.post('/users', postNewUser);
 
+app.put('/users/:id', putUserById);
+
 app.get('/users/:id', getUserById);
 
 app.post('/login', loginUser);
+
+app.delete('/users/:id', deleteUserById);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
