@@ -1,4 +1,9 @@
 //TODO: add users mock data and endpoints
+// Ei käytetä tätä näin tämä vain testi esimerkki, että yhteys toimii
+import promisePool from '../utils/database.js';
+console.log('db connection test');
+promisePool.query('SELECT * FROM Users');
+
 const users = [
   {
     id: 1,
