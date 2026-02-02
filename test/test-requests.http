@@ -24,11 +24,14 @@ Content-Type: application/json
 
 {"name": "updated Omena"}
 
-### Get all users
-GET http://localhost:3000/users
+##############################
+### users endpoints
 
-### Create a new user
-POST http://localhost:3000/users
+### Get all users
+GET {{apiurl}}/users
+
+### Register new user
+POST {{apiurl}}/users
 Content-Type: application/json
 
  {
@@ -38,11 +41,11 @@ Content-Type: application/json
     }
 
 ### Get user by id
-GET http://localhost:3000/users/6
+GET {{apiurl}}/users/4
 Content-Type: application/json
 
 ### Update user by id
-PUT http://localhost:3000/users/2
+PUT {{apiurl}}/users/2
 Content-Type: application/json
 
  {
@@ -51,7 +54,7 @@ Content-Type: application/json
  }
 
 ### Login succes
-POST http://localhost:3000/login
+POST {{apiurl}}/users/login
 Content-Type: application/json
 
  {
@@ -60,7 +63,7 @@ Content-Type: application/json
  }
 
 ### Login fail
-POST http://localhost:3000/login
+POST {{apiurl}}/users/login
 Content-Type: application/json
 
  {
@@ -69,5 +72,5 @@ Content-Type: application/json
  }
 
 ### Delete user by id
-DELETE http://localhost:3000/users/3
+DELETE {{apiurl}}/users/3
 Content-Type: application/json

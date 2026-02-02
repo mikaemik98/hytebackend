@@ -1,24 +1,4 @@
-//TODO: add users mock data and endpoints
-const users = [
-  {
-    id: 1,
-    username: 'johndoe',
-    password: 'password1',
-    email: 'johndoe@example.com',
-  },
-  {
-    id: 2,
-    username: 'janedoe',
-    password: 'password2',
-    email: 'janedoe@example.com',
-  },
-  {
-    id: 3,
-    username: 'bobsmith',
-    password: 'password3',
-    email: 'bobsmith@example.com',
-  },
-];
+import users from '../models/user-model.js';
 
 const getUsers = (req, res) => {
   for (let i = 0; i < users.length; i++) {
@@ -43,7 +23,7 @@ const postNewUser = (pyynto, vastaus) => {
   // ominaisuudet ja lisätään users-taulukon loppuun
   users.push({id: newId, ...newUser});
   delete newUser.password;
-  console.log('users', users);
+  //console.log('users', users);
   vastaus.status(201).json({message: 'new user added', user_id: newId});
 };
 
