@@ -1,69 +1,137 @@
 //import users from '../models/user-model.js';
 // HUOM: mokkidata on poistettu modelista
 
-import {findUserByUsername} from '../models/user-model.js';
+import {
+  createUser,
+  deleteUser,
+  findUserById,
+  findUserByUsername,
+  getAllUsers,
+  updateUser,
+} from '../models/user-model.js';
 
-// TODO: lisää tietokantafunktiot user modeliin ja käytä niitä täällä
-const getUsers = (req, res) => {
-  for (let i = 0; i < users.length; i++) {
-    delete users[i].password;
-  }
-  res.json(users);
-};
-
-// Käyttäjän lisäys (rekisteröityminen)
-const postNewUser = (pyynto, vastaus) => {
-  const newUser = pyynto.body;
-  // Uusilla käyttäjillä pitää olla kaikki vaaditut ominaisuudet tai palautetaan virhe
-  // itse koodattu erittäin yksinkertainen syötteen validointi
-  if (!(newUser.username && newUser.password && newUser.email)) {
-    return vastaus.status(400).json({error: 'required fields missing'});
-  }
-
-  // HUOM: ÄLÄ ikinä loggaa käyttäjätietoja ensimmäisten pakollisten testien jälkeen!!! (tietosuoja)
-  //console.log('registering new user', newUser);
-  const newId = users[users.length - 1].id + 1;
-  // luodaan uusi objekti, joka sisältää id-ominaisuuden ja kaikki newUserObjektin
-  // ominaisuudet ja lisätään users-taulukon loppuun
-  users.push({id: newId, ...newUser});
-  delete newUser.password;
-  //console.log('users', users);
-  vastaus.status(201).json({message: 'new user added', user_id: newId});
-};
-
-const getUserById = (req, res) => {
-  console.log('getting user id:', req.params.id);
-  const userFound = users.find((user) => user.id == req.params.id);
-  if (userFound) {
-    res.json(userFound);
-  } else {
-    res.status(404).json({message: 'user not found'});
+/*GET all users*/
+const getUsers = async (req, res) => {
+  try {
+    const users = await getAllUsers();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({error: error.message});
   }
 };
 
-const putUserById = (req, res) => {
-  console.log('updating user', req.params.id);
-  const userIndex = users.findIndex((user) => user.id == req.params.id);
-  if (userIndex !== -1) {
-    users[userIndex] = {...users[userIndex], ...req.body};
-    res.json({message: 'user updated', user: users[userIndex]});
-  } else {
-    res.status(404).json({message: 'user not found'});
+/*CREATE new user (rekisteröinti)*/
+const postNewUser = async (req, res) => {
+  try {
+    const {username, password, email} = req.body;
+    if (!username || !password || !email) {
+      return res.status(400).json({
+        error: 'required fields missing',
+      });
+    }
+
+    const user_id = await createUser(req.body);
+
+    res.status(201).json({
+      message: 'user created',
+      user_id,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
-const deleteUserById = (req, res) => {
-  const userDelete = users.find((user) => user.id == req.params.id);
-  if (userDelete) {
-    users.splice(users.indexOf(userDelete), 1);
-    res.status(204).json({message: 'deleted user'});
-  } else {
-    res.status(404).json({message: 'user not found'});
+/*GET user by id*/
+const getUserById = async (req, res) => {
+  try {
+    const user = await findUserById(req.params.id);
+    if (!user) {
+      return res.status(404).json({
+        error: 'user not found',
+      });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+/*LOGIN*/
+const loginUser = async (req, res) => {
+  try {
+    const {username, password} = req.body;
+    const user = await findUserByUsername(username);
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'user not found',
+      });
+    }
+    if (user.password !== password) {
+      return res.status(403).json({
+        error: 'invalid password',
+      });
+    }
+    delete user.password;
+
+    res.json({
+      message: 'login succesful',
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+/*UPDATE*/
+const putUserById = async (req, res) => {
+  try {
+    const affected = await updateUser(req.params.id, req.body);
+
+    if (affected === 0) {
+      return res.status(404).json({
+        error: 'user not found',
+      });
+    }
+
+    res.json({
+      message: 'user updated',
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+/*DELETE*/
+const deleteUserById = async (req, res) => {
+  try {
+    const affected = await deleteUser(req.params.id);
+
+    if (affected === 0) {
+      return res.status(404).json({
+        error: 'user not found',
+      });
+    }
+    res.json({
+      message: 'user deleted',
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };
 
 // Tietokantaversio
-const loginUser = async (req, res) => {
+/* const loginUser = async (req, res) => {
   const {username, password} = req.body;
   // haetaan käyttäjä-objekti käyttäjän nimen perusteella
   const user = await findUserByUsername(username);
@@ -78,7 +146,7 @@ const loginUser = async (req, res) => {
   }
   res.status(404).json({error: 'user not found'});
 };
-
+ */
 export {
   getUsers,
   postNewUser,
