@@ -1,5 +1,9 @@
-import users from '../models/user-model.js';
+//import users from '../models/user-model.js';
+// HUOM: mokkidata on poistettu modelista
 
+import {findUserByUsername} from '../models/user-model.js';
+
+// TODO: lisää tietokantafunktiot user modeliin ja käytä niitä täällä
 const getUsers = (req, res) => {
   for (let i = 0; i < users.length; i++) {
     delete users[i].password;
@@ -58,14 +62,17 @@ const deleteUserById = (req, res) => {
   }
 };
 
-const loginUser = (req, res) => {
+// Tietokantaversio
+const loginUser = async (req, res) => {
   const {username, password} = req.body;
   // haetaan käyttäjä-objekti käyttäjän nimen perusteella
-  const userFound = users.find((user) => username === user.username);
-  if (userFound) {
-    if (userFound.password === password) {
-      delete userFound.password;
-      return res.json({message: 'login ok', user: userFound});
+  const user = await findUserByUsername(username);
+  console.log('loginUser user from db', user);
+
+  if (user) {
+    if (user.password === password) {
+      delete user.password;
+      return res.json({message: 'login ok', user: user});
     }
     return res.status(403).json({error: 'invalid password'});
   }

@@ -59,7 +59,7 @@ Content-Type: application/json
 
  {
     "username": "johndoe",
-    "password": "password1"
+    "password": "temp-pw-1"
  }
 
 ### Login fail
@@ -74,3 +74,25 @@ Content-Type: application/json
 ### Delete user by id
 DELETE {{apiurl}}/users/3
 Content-Type: application/json
+
+##############################
+### diary entry endpoints
+
+### Get all entries
+GET {{apiurl}}/entries
+
+### Get entry by id
+GET {{apiurl}}/entries/7
+
+### Post new entry
+POST {{apiurl}}/entries
+Content-Type: application/json
+
+ {
+    "user_id": "3",
+    "entry_date": "2026-02-04",
+    "mood": "happy",
+    "weight": 75,
+    "sleep_hours": 6.5,
+    "notes": "ihan hyvä päivä"
+    }
