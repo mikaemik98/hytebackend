@@ -2,6 +2,7 @@ import {
   listAllEntries,
   findEntryById,
   addEntry,
+  findEntriesByUserId,
 } from '../models/entry-model.js';
 
 const getEntries = async (req, res) => {
@@ -20,6 +21,15 @@ const getEntryById = async (req, res) => {
     res.json(entry);
   } else {
     res.sendStatus(404);
+  }
+};
+
+const getEntriesByUserId = async (req, res) => {
+  try {
+    const entries = await findEntriesByUserId(req.params.id);
+    res.json(entries);
+  } catch (error) {
+    res.status(500).json({error: error.message});
   }
 };
 
@@ -49,4 +59,11 @@ const deleteEntry = (req, res) => {
   res.sendStatus(200);
 };
 
-export {getEntries, getEntryById, postEntry, putEntry, deleteEntry};
+export {
+  getEntries,
+  getEntryById,
+  postEntry,
+  putEntry,
+  deleteEntry,
+  getEntriesByUserId,
+};

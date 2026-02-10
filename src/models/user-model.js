@@ -13,7 +13,9 @@ const findUserByUsername = async (username) => {
   return rows[0];
 };
  */
-/* GET all users */
+
+//GET all users
+//hakee kaikki käyttäjät tietokannasta
 const getAllUsers = async () => {
   const [rows] = await promisePool.execute(
     'SELECT user_id, username, email, userl_level, created_at FROM users',
@@ -21,7 +23,7 @@ const getAllUsers = async () => {
   return rows;
 };
 
-/*GET user by id*/
+//GET user by id
 const findUserById = async (id) => {
   const [rows] = await promisePool.execute(
     'SELECT user_id, username, email, userl_level, created_at FROM users WHERE user_id = ?',
@@ -30,7 +32,8 @@ const findUserById = async (id) => {
   return rows[0];
 };
 
-/*GET user by username*/
+//GET user by username
+//käytetään loginissa
 const findUserByUsername = async (username) => {
   const [rows] = await promisePool.execute(
     'SELECT * FROM users WHERE username = ?',
@@ -39,7 +42,7 @@ const findUserByUsername = async (username) => {
   return rows[0];
 };
 
-/*CREATE new user*/
+//CREATE new user
 const createUser = async (user) => {
   const sql = `
     INSERT INTO users (username, password, email)
@@ -50,10 +53,11 @@ const createUser = async (user) => {
     user.password,
     user.email,
   ]);
+  //palauttaa uuden käyttäjän ID:n
   return result.insertId;
 };
 
-/*UPDATE user*/
+//UPDATE user
 const updateUser = async (id, user) => {
   const sql = `
     UPDATE users
@@ -68,7 +72,7 @@ const updateUser = async (id, user) => {
   return result.affectedRows;
 };
 
-/*DELETE user*/
+//DELETE user
 const deleteUser = async (id) => {
   const [result] = await promisePool.execute(
     'DELETE FROM users WHERE user_id = ?',

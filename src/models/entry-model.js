@@ -35,6 +35,14 @@ const findEntryById = async (id) => {
   }
 };
 
+const findEntriesByUserId = async (user_id) => {
+  const [rows] = await promisePool.execute(
+    `SELECT * FROM diaryentries WHERE user_id = ? ORDER BY entry_date DESC`,
+    [user_id],
+  );
+  return rows;
+};
+
 const addEntry = async (entry) => {
   const {user_id, entry_date, mood, weight, sleep_hours, notes} = entry;
   const sql = `INSERT INTO DiaryEntries (user_id, entry_date, mood, weight, sleep_hours, notes)
@@ -50,4 +58,4 @@ const addEntry = async (entry) => {
   }
 };
 
-export {listAllEntries, findEntryById, addEntry};
+export {listAllEntries, findEntryById, addEntry, findEntriesByUserId};

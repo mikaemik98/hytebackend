@@ -4,6 +4,7 @@ import itemRouter from './routes/item-router.js';
 import userRouter from './routes/user-router.js';
 import requestLogger from './middlewares/logger.js';
 import entryRouter from './routes/entry-router.js';
+import workoutRouter from './routes/workout-router.js';
 const hostname = '127.0.0.1';
 const app = express();
 const port = 3000;
@@ -33,6 +34,8 @@ app.use('/api/users', userRouter);
 
 //Diary entries resource router
 app.use('/api/entries', entryRouter);
+
+app.use('/api/workouts', workoutRouter);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
