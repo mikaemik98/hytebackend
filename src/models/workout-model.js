@@ -1,3 +1,5 @@
+//sql kyselyt ja tietokantalogiika
+
 import promisePool from '../utils/database.js';
 
 //GET all workouts
@@ -15,21 +17,6 @@ const getWorkoutById = async (id) => {
     [id],
   );
   return rows[0];
-};
-
-//CREATE workout
-const createWorkout = async (workout) => {
-  const sql = `INSERT INTO workout_log (user_id, exercise, weight_kg, reps, workout_date) VALUES (?, ?, ?, ?, ?)`;
-
-  const [result] = await promisePool.execute(sql, [
-    workout.user_id,
-    workout.exercise,
-    workout.weight_kg,
-    workout.reps,
-    workout.workout_date,
-  ]);
-
-  return result.insertId;
 };
 
 const insertWorkout = async (workout) => {
@@ -55,9 +42,13 @@ const deleteWorkout = async (id) => {
   return result.affectedRows;
 };
 
+//GET workouts by user_id
 const findWorkoutsByUserId = async (user_id) => {
   const [rows] = await promisePool.execute(
-    `SELECT * FROM workout_log WHERE user_id = ? ORDER BY workout_date DESC, workout_id DESC`,
+    `SELECT workout_id, user_id, exercise, weight_kg, sets, reps, workout_date
+     FROM workout_log
+     WHERE user_id = ?
+     ORDER BY workout_date DESC`,
     [user_id],
   );
   return rows;
@@ -66,7 +57,6 @@ const findWorkoutsByUserId = async (user_id) => {
 export {
   getAllWorkouts,
   getWorkoutById,
-  createWorkout,
   deleteWorkout,
   findWorkoutsByUserId,
   insertWorkout,

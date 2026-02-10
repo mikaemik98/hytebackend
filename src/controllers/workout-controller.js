@@ -1,3 +1,5 @@
+//vastaanottaa req/res, validoi datan ja kutsuu modelia
+
 import {
   getAllWorkouts,
   getWorkoutById,
@@ -57,6 +59,7 @@ const postWorkout = async (req, res) => {
       return res.status(400).json({error: 'Missing fields'});
     }
 
+    //tallennetaan tietokantaan
     const workout_id = await insertWorkout({
       user_id,
       exercise,
@@ -92,9 +95,14 @@ const removeWorkout = async (req, res) => {
   }
 };
 
+// GET /api/workouts/user/:id
 const getWorkoutsByUserId = async (req, res) => {
-  const workouts = await findWorkoutsByUserId(req.params.id);
-  res.json(workouts);
+  try {
+    const workouts = await findWorkoutsByUserId(req.params.id);
+    res.json(workouts);
+  } catch (error) {
+    res.status(500).json({error: error.message});
+  }
 };
 
 export {
