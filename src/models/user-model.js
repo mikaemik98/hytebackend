@@ -72,6 +72,14 @@ const updateUser = async (id, user) => {
   return result.affectedRows;
 };
 
+const findUserByUsernameWithPassword = async (username) => {
+  const [rows] = await promisePool.execute(
+    'SELECT user_id, username, email, user_level, password FROM users WHERE username = ?',
+    [username],
+  );
+  return rows[0];
+};
+
 //DELETE user
 const deleteUser = async (id) => {
   const [result] = await promisePool.execute(
@@ -88,4 +96,5 @@ export {
   createUser,
   updateUser,
   deleteUser,
+  findUserByUsernameWithPassword,
 };

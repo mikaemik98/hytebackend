@@ -45,10 +45,10 @@ const deleteWorkout = async (id) => {
 //GET workouts by user_id
 const findWorkoutsByUserId = async (user_id) => {
   const [rows] = await promisePool.execute(
-    `SELECT workout_id, user_id, exercise, weight_kg, sets, reps, workout_date
+    `SELECT workout_id, user_id, exercise, sets, reps, weight_kg, workout_date
      FROM workout_log
      WHERE user_id = ?
-     ORDER BY workout_date DESC`,
+     ORDER BY workout_date DESC, workout_id DESC`,
     [user_id],
   );
   return rows;

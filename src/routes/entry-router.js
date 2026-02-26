@@ -1,17 +1,30 @@
 import express from 'express';
+import {authenticateToken} from '../middlewares/authentication.js';
 import {
   getEntries,
   getEntryById,
   postEntry,
   getEntriesByUserId,
+  putEntry,
+  deleteEntry,
+  getMyEntries,
 } from '../controllers/entry-controller.js';
 
 const entryRouter = express.Router();
 
-entryRouter.route('/').get(getEntries).post(postEntry);
+entryRouter.get('/me', authenticateToken, getMyEntries);
 
-entryRouter.get('/user/:id', getEntriesByUserId);
+entryRouter
+  .route('/')
+  .get(authenticateToken, getEntries)
+  .post(authenticateToken, postEntry);
 
-entryRouter.route('/:id').get(getEntryById);
+entryRouter.get('/user/:id', authenticateToken, getEntriesByUserId);
+
+entryRouter
+  .route('/:id')
+  .put(authenticateToken, putEntry)
+  .delete(authenticateToken, deleteEntry)
+  .get(authenticateToken, getEntryById); // suositus: suojaa myös yksittäinen haku
 
 export default entryRouter;

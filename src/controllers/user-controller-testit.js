@@ -59,11 +59,4 @@ const deleteUserById = (req, res) => {
   }
 };
 
-export {
-  getUsers,
-  postNewUser,
-  getUserById,
-  loginUser,
-  putUserById,
-  deleteUserById,
-};
+export {getUsers, postNewUser, getUserById, putUserById, deleteUserById};

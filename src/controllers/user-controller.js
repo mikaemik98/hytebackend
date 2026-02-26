@@ -1,12 +1,11 @@
 //import users from '../models/user-model.js';
 // HUOM: mokkidata on poistettu modelista
 //import tietokantafunktiot user-modelista
-
+import bcrypt from 'bcryptjs';
 import {
   createUser,
   deleteUser,
   findUserById,
-  findUserByUsername,
   getAllUsers,
   updateUser,
 } from '../models/user-model.js';
@@ -35,8 +34,15 @@ const postNewUser = async (req, res) => {
       });
     }
 
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     //kutsutaan modelia, joka lisää käyttäjän tietokantaan
-    const user_id = await createUser(req.body);
+    const user_id = await createUser({
+      username,
+      email,
+      password: hashedPassword,
+    });
 
     res.status(201).json({
       message: 'user created',
@@ -68,7 +74,7 @@ const getUserById = async (req, res) => {
 };
 
 //Login
-const loginUser = async (req, res) => {
+/* const loginUser = async (req, res) => {
   try {
     //otetaan username ja password frontendiltä
     const {username, password} = req.body;
@@ -98,46 +104,43 @@ const loginUser = async (req, res) => {
       error: error.message,
     });
   }
-};
+}; */
 
 //UPDATE user
 const putUserById = async (req, res) => {
   try {
-    const affected = await updateUser(req.params.id, req.body);
+    const token_user_id = req.user.user_id;
+    const user_id = Number(req.params.id);
 
-    if (affected === 0) {
-      return res.status(404).json({
-        error: 'user not found',
-      });
+    if (token_user_id !== user_id) {
+      return res.status(403).json({message: 'forbidden'});
     }
 
-    res.json({
-      message: 'user updated',
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: error.message,
-    });
+    const affected = await updateUser(user_id, req.body);
+    if (affected === 0) return res.status(404).json({error: 'user not found'});
+
+    res.json({message: 'user updated'});
+  } catch (e) {
+    res.status(500).json({error: e.message});
   }
 };
 
 //DELETE user
 const deleteUserById = async (req, res) => {
   try {
-    const affected = await deleteUser(req.params.id);
+    const token_user_id = req.user.user_id;
+    const user_id = Number(req.params.id);
 
-    if (affected === 0) {
-      return res.status(404).json({
-        error: 'user not found',
-      });
+    if (token_user_id !== user_id) {
+      return res.status(403).json({message: 'forbidden'});
     }
-    res.json({
-      message: 'user deleted',
-    });
+
+    const affected = await deleteUser(user_id);
+    if (affected === 0) return res.status(404).json({error: 'user not found'});
+
+    res.json({message: 'user deleted'});
   } catch (error) {
-    res.status(500).json({
-      error: error.message,
-    });
+    res.status(500).json({error: error.message});
   }
 };
 
@@ -160,11 +163,4 @@ const deleteUserById = async (req, res) => {
  */
 
 //exportit routerille
-export {
-  getUsers,
-  postNewUser,
-  getUserById,
-  loginUser,
-  putUserById,
-  deleteUserById,
-};
+export {getUsers, postNewUser, getUserById, putUserById, deleteUserById};
