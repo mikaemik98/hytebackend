@@ -7,6 +7,7 @@ import {
   findWorkoutsByUserId,
   insertWorkout,
 } from '../models/workout-model.js';
+import {updateGoalsFromWorkout} from '../models/goal-model.js';
 
 //GET api workouts
 const getWorkouts = async (req, res) => {
@@ -53,6 +54,7 @@ const createWorkouts = async (req, res) => {
 const postWorkout = async (req, res) => {
   try {
     const {user_id, exercise, weight_kg, reps, sets, workout_date} = req.body;
+    await updateGoalsFromWorkout(user_id, exercise, weight_kg);
 
     // vaaditaan vain nämä
     if (!user_id || !exercise) {

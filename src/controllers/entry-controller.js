@@ -5,6 +5,7 @@ import {
   updateEntryByIdAndUser,
   deleteEntryByIdAndUser,
 } from '../models/entry-model.js';
+import {updateGoalsFromEntryWeight} from '../models/goal-model.js';
 
 const getMyEntries = async (req, res) => {
   const userId = req.user.user_id;
@@ -51,6 +52,7 @@ const postEntry = async (req, res) => {
   try {
     const user_id = req.user.user_id; //aina tokenista
     const {entry_date, mood, weight, sleep_hours, notes} = req.body;
+    await updateGoalsFromEntryWeight(user_id, weight);
 
     if (!entry_date) return res.sendStatus(400);
 

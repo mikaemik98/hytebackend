@@ -7,6 +7,7 @@ import requestLogger from './middlewares/logger.js';
 import entryRouter from './routes/entry-router.js';
 import workoutRouter from './routes/workout-router.js';
 import authRouter from './routes/auth-router.js';
+import goalRouter from './routes/goal-router.js';
 const hostname = '127.0.0.1';
 const app = express();
 const port = 3000;
@@ -41,6 +42,9 @@ app.use('/api/entries', entryRouter);
 
 //workout entries resource router
 app.use('/api/workouts', workoutRouter);
+
+//goal entries
+app.use('/api/goals', goalRouter);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
