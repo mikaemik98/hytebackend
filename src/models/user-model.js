@@ -1,3 +1,5 @@
+///User-malli: SQL-funktiot (select/insert/update/delete).
+
 import promisePool from '../utils/database.js';
 
 //TODO: lisää modelit ja muokkaa kontrollerit reiteille:

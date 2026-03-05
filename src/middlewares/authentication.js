@@ -1,3 +1,5 @@
+///JWT-autentikoinnin middleware: lukee Authorization: Bearer <token>, validoi ja asettaa req.user.
+
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 

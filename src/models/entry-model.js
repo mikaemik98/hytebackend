@@ -24,7 +24,7 @@ const findEntryById = async (id) => {
       'SELECT * FROM diaryentries WHERE entry_id = ?',
       [id],
     );
-    //turvation tapa, mahdollistaa sql-injektiohaavoittuvuuden:
+    //turvaton tapa, mahdollistaa sql-injektiohaavoittuvuuden:
     //const [rows] = await promisePool.query('SELECT * FROM DiaryEntries WHERE entry_id=' +id);
 
     //console.log('rows', rows);

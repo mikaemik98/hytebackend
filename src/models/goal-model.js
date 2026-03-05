@@ -1,3 +1,5 @@
+///Goal-malli: SQL-kyselyt goals-tauluun + apufunktioita (synkkaus, completed-status).
+
 import promisePool from '../utils/database.js';
 
 // list user's goals

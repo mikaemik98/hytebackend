@@ -1,3 +1,5 @@
+///Diary entry -kontrolleri: lukee req.user tokenista, tarkistaa omistajuuden PUT/DELETE:ssä, kutsuu mallia.
+
 import {
   findEntryById,
   addEntry,
@@ -49,6 +51,14 @@ const getEntriesByUserId = async (req, res) => {
 };
 
 const postEntry = async (req, res) => {
+  /* const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    console.log('postEntry errors', errors.array());
+    const error = new Error('Invalid or missing fields');
+    error.status = 400;
+    return next(error);
+  } */
   try {
     const user_id = req.user.user_id; //aina tokenista
     const {entry_date, mood, weight, sleep_hours, notes} = req.body;

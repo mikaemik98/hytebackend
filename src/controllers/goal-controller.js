@@ -1,3 +1,5 @@
+///Goal-kontrolleri: luo/hakee/poistaa goalit, synkkaa current_value workout-logista.
+
 import {
   findGoalsByUserId,
   createGoal,

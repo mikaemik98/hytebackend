@@ -1,3 +1,5 @@
+///Goal-reitit: /api/goals/me (GET), /api/goals (POST), /api/goals/:id (DELETE), tokenilla.
+
 import express from 'express';
 import {authenticateToken} from '../middlewares/authentication.js';
 import {

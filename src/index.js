@@ -1,3 +1,5 @@
+///Express-sovelluksen käynnistyspiste: middlewaret, staattinen frontti, API-reitittimet, 404 + virhehandlerit.
+
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
@@ -8,6 +10,7 @@ import entryRouter from './routes/entry-router.js';
 import workoutRouter from './routes/workout-router.js';
 import authRouter from './routes/auth-router.js';
 import goalRouter from './routes/goal-router.js';
+import {errorHandler, notFoundHandler} from './middlewares/error-handler.js';
 const hostname = '127.0.0.1';
 const app = express();
 const port = 3000;
@@ -45,6 +48,12 @@ app.use('/api/workouts', workoutRouter);
 
 //goal entries
 app.use('/api/goals', goalRouter);
+
+// Default for all routes not handled by routers above
+app.use(notFoundHandler);
+
+// Add error handler middleware as the last middleware in the chain
+app.use(errorHandler);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);

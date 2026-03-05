@@ -1,3 +1,5 @@
+///Workout-reitit: /api/workouts (GET+POST), /api/workouts/user/:id, /api/workouts/:id (GET/DELETE).
+
 import express from 'express';
 
 import {

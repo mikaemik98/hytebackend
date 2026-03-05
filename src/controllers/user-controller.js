@@ -9,6 +9,7 @@ import {
   getAllUsers,
   updateUser,
 } from '../models/user-model.js';
+import {validationResult} from 'express-validator';
 
 //GET all users
 //Hakee kaikki käyttäjät teitokannasta
@@ -23,7 +24,7 @@ const getUsers = async (req, res) => {
 };
 
 //CREATE new user (rekisteröinti)
-const postNewUser = async (req, res) => {
+const postNewUser = async (req, res, next) => {
   try {
     //otetaan data frontendiltä
     const {username, password, email} = req.body;
@@ -32,6 +33,14 @@ const postNewUser = async (req, res) => {
       return res.status(400).json({
         error: 'required fields missing',
       });
+    }
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      const error = new Error('Invalid or missing fields');
+      error.status = 400;
+      return next(error);
     }
 
     const salt = await bcrypt.genSalt(10);
