@@ -18,6 +18,7 @@ const entryRouter = express.Router();
 
 entryRouter
   .route('/')
+  .get(authenticateToken, getEntries)
   .post(
     authenticateToken,
     body('entry_date', 'entry_date must be a valid date').isISO8601(),
@@ -30,11 +31,6 @@ entryRouter
   );
 
 entryRouter.get('/me', authenticateToken, getMyEntries);
-
-entryRouter
-  .route('/')
-  .get(authenticateToken, getEntries)
-  .post(authenticateToken, postEntry);
 
 entryRouter.get('/user/:id', authenticateToken, getEntriesByUserId);
 

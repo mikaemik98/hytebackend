@@ -1,3 +1,11 @@
+/**
+ * Kirjautumislogiikka: hakee käyttäjän DB:stä, vertaa bcryptillä, luo JWT-tokenin, palauttaa user+token.
+ *
+ * Huom:
+ * - Frontissa token tallennetaan localStorageen ja lähetetään Authorization-headerissa.
+ * - Backissa req.user asetetaan authentication-middlewarellä (JWT).
+ */
+
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import 'dotenv/config';

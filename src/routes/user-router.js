@@ -16,6 +16,7 @@ const userRouter = express.Router();
 
 userRouter
   .route('/')
+  .get(getUsers)
   .post(
     body('username', 'username must be 3-20 characters long and alphanumeric')
       .trim()
@@ -31,10 +32,6 @@ userRouter
     validationErrorHandler,
     postNewUser,
   );
-
-userRouter.route('/').get(getUsers).post(postNewUser);
-
-/* userRouter.post('/login', loginUser); */
 
 userRouter
   .route('/:id')
